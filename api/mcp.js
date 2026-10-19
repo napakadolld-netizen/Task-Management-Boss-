@@ -1,3 +1,4 @@
+const { timingSafeEqual, randomUUID } = require('crypto');
 const PROJECTS = ['13Enterprise', '13Education', 'DR.EV', 'EV Life Thailand', 'Delivery Drone', 'งานทั่วไป / ประสานงาน'];
 const STATUSES = ['pending', 'doing', 'done'];
 const PRIORITIES = ['low', 'normal', 'high'];
@@ -17,7 +18,10 @@ function textResult(value) {
 function authOk(req) {
   const expected = process.env.DAYFLOW_MCP_TOKEN;
   const supplied = (req.headers.authorization || '').replace(/^Bearer\s+/i, '');
-  return Boolean(expected && supplied && supplied === expected);
+  if (!expected || !supplied) return false;
+  const left = Buffer.from(supplied);
+  const right = Buffer.from(expected);
+  return left.length === right.length && timingSafeEqual(left, right);
 }
 function sbHeaders() {
   const key = process.env.SUPABASE_SECRET_KEY;
@@ -60,7 +64,7 @@ async function callTool(name, args = {}) {
     if (!validDate(args.date)) throw new Error('date must be YYYY-MM-DD');
     const status = args.status || 'pending', priority = args.priority || 'normal';
     if (!STATUSES.includes(status) || !PRIORITIES.includes(priority)) throw new Error('Invalid status or priority');
-    const created = await api('tasks', { method: 'POST', body: JSON.stringify({ id: crypto.randomUUID(), user_id: userId, title: args.title.trim(), notes: args.notes || '', requested_by: args.requestedBy || '', project: args.project, task_date: args.date, status, priority, completed: status === 'done' ? args.date : null }) });
+    const created = await api('tasks', { method: 'POST', body: JSON.stringify({ id: randomUUID(), user_id: userId, title: args.title.trim(), notes: args.notes || '', requested_by: args.requestedBy || '', project: args.project, task_date: args.date, status, priority, completed: status === 'done' ? args.date : null }) });
     return created?.[0] || created;
   }
   if (name === 'update_task') {
@@ -71,6 +75,7 @@ async function callTool(name, args = {}) {
     if (args.date !== undefined) { if (!validDate(args.date)) throw new Error('date must be YYYY-MM-DD'); patch.task_date = args.date; }
     if (patch.project && !PROJECTS.includes(patch.project)) throw new Error('Invalid project');
     if (patch.status && !STATUSES.includes(patch.status)) throw new Error('Invalid status');
+    if (args.status !== undefined) patch.completed = args.status === 'done' ? (args.completed || new Date(Date.now() + 7 * 60 * 60 * 1000).toISOString().slice(0, 10)) : null;
     if (patch.priority && !PRIORITIES.includes(patch.priority)) throw new Error('Invalid priority');
     const query = new URLSearchParams({ id: `eq.${args.id}`, user_id: `eq.${userId}`, select: '*' });
     const updated = await api(`tasks?${query}`, { method: 'PATCH', body: JSON.stringify(patch) });
