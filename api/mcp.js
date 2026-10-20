@@ -64,7 +64,10 @@ async function callTool(name, args = {}) {
     if (!validDate(args.date)) throw new Error('date must be YYYY-MM-DD');
     const status = args.status || 'pending', priority = args.priority || 'normal';
     if (!STATUSES.includes(status) || !PRIORITIES.includes(priority)) throw new Error('Invalid status or priority');
-    const created = await api('tasks', { method: 'POST', body: JSON.stringify({ id: randomUUID(), user_id: userId, title: args.title.trim(), notes: args.notes || '', requested_by: args.requestedBy || '', project: args.project, task_date: args.date, status, priority, completed: status === 'done' ? args.date : null }) });
+    if (args.parentId) { const parentQuery = new URLSearchParams({ id: `eq.${args.parentId}`, user_id: `eq.${userId}`, select: 'id' }); const parents = await api(`tasks?${parentQuery}`); if (!parents?.length) throw new Error('Parent task not found'); }
+    const row = { id: randomUUID(), user_id: userId, title: args.title.trim(), notes: args.notes || '', requested_by: args.requestedBy || '', project: args.project, task_date: args.date, status, priority, completed: status === 'done' ? args.date : null };
+    if (args.parentId) row.parent_id = args.parentId;
+    const created = await api('tasks', { method: 'POST', body: JSON.stringify(row) });
     return created?.[0] || created;
   }
   if (name === 'update_task') {
@@ -73,6 +76,7 @@ async function callTool(name, args = {}) {
     for (const field of ['title', 'notes', 'project', 'status', 'priority']) if (args[field] !== undefined) patch[field] = args[field];
     if (args.requestedBy !== undefined) patch.requested_by = args.requestedBy;
     if (args.date !== undefined) { if (!validDate(args.date)) throw new Error('date must be YYYY-MM-DD'); patch.task_date = args.date; }
+    if (args.parentId !== undefined) { if (args.parentId === args.id) throw new Error('A task cannot be its own parent'); if (args.parentId) { const parentQuery = new URLSearchParams({ id: `eq.${args.parentId}`, user_id: `eq.${userId}`, select: 'id' }); const parents = await api(`tasks?${parentQuery}`); if (!parents?.length) throw new Error('Parent task not found'); patch.parent_id = args.parentId; } else patch.parent_id = null; }
     if (patch.project && !PROJECTS.includes(patch.project)) throw new Error('Invalid project');
     if (patch.status && !STATUSES.includes(patch.status)) throw new Error('Invalid status');
     if (args.status !== undefined) patch.completed = args.status === 'done' ? (args.completed || new Date(Date.now() + 7 * 60 * 60 * 1000).toISOString().slice(0, 10)) : null;
@@ -93,8 +97,8 @@ async function callTool(name, args = {}) {
 }
 const tools = [
   { name: 'list_tasks', description: 'List Dayflow tasks for the signed-in owner, optionally filtered by project and date range.', inputSchema: { type: 'object', properties: { project: { type: 'string', enum: PROJECTS }, from: { type: 'string', description: 'Start date YYYY-MM-DD' }, to: { type: 'string', description: 'End date YYYY-MM-DD' } } } },
-  { name: 'create_task', description: 'Create a task in the owner’s Dayflow workspace.', inputSchema: { type: 'object', required: ['title', 'project', 'date'], properties: { title: { type: 'string' }, project: { type: 'string', enum: PROJECTS }, date: { type: 'string', description: 'Start date YYYY-MM-DD' }, notes: { type: 'string' }, requestedBy: { type: 'string' }, status: { type: 'string', enum: STATUSES }, priority: { type: 'string', enum: PRIORITIES } } } },
-  { name: 'update_task', description: 'Update an existing Dayflow task by its id. Call list_tasks first to find the id.', inputSchema: { type: 'object', required: ['id'], properties: { id: { type: 'string' }, title: { type: 'string' }, project: { type: 'string', enum: PROJECTS }, date: { type: 'string' }, notes: { type: 'string' }, requestedBy: { type: 'string' }, status: { type: 'string', enum: STATUSES }, priority: { type: 'string', enum: PRIORITIES } } } },
+  { name: 'create_task', description: 'Create a task in the owner’s Dayflow workspace.', inputSchema: { type: 'object', required: ['title', 'project', 'date'], properties: { title: { type: 'string' }, project: { type: 'string', enum: PROJECTS }, date: { type: 'string', description: 'Start date YYYY-MM-DD' }, notes: { type: 'string' }, requestedBy: { type: 'string' }, parentId: { type: 'string', description: 'Optional parent task ID for subtask nesting' }, status: { type: 'string', enum: STATUSES }, priority: { type: 'string', enum: PRIORITIES } } } },
+  { name: 'update_task', description: 'Update an existing Dayflow task by its id. Call list_tasks first to find the id.', inputSchema: { type: 'object', required: ['id'], properties: { id: { type: 'string' }, title: { type: 'string' }, project: { type: 'string', enum: PROJECTS }, date: { type: 'string' }, notes: { type: 'string' }, requestedBy: { type: 'string' }, parentId: { type: ['string', 'null'], description: 'Parent task ID, or null to make this a top-level task' }, status: { type: 'string', enum: STATUSES }, priority: { type: 'string', enum: PRIORITIES } } } },
   { name: 'delete_task', description: 'Delete an existing Dayflow task by its id. Call list_tasks first to confirm the task.', inputSchema: { type: 'object', required: ['id'], properties: { id: { type: 'string' } } } }
 ];
 

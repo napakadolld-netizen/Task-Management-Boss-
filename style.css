@@ -12,3 +12,5 @@
 
 
 .header-actions{display:flex;align-items:center;gap:4px}.account-label{font-size:11px;color:#55715f;margin-right:8px}.auth-description{font-size:13px;color:#63786e;line-height:1.8}.auth-message{font-size:12px;color:#42734f;min-height:1.5em}.auth-message.error{color:#a34c45}@media(max-width:760px){.header-actions{gap:0}.account-label{display:none}header .quiet{font-size:9px;padding:5px}.auth-dialog{max-width:94vw}}
+
+.task-parent{font-size:11px;color:#59776d;background:#f0f5f2;border-radius:5px;padding:6px 8px;margin:8px 0}.parent-help{display:block;font-size:10px;color:#73847a;line-height:1.7;margin-top:5px}
