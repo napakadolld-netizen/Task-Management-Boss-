@@ -1,5 +1,5 @@
 const { timingSafeEqual, randomUUID } = require('crypto');
-const PROJECTS = ['13Enterprise', '13Education', 'DR.EV', 'EV Life Thailand', 'Delivery Drone', 'งานทั่วไป / ประสานงาน'];
+const PROJECTS = ['13Enterprise', '13Education', 'DR.EV', 'EV Life Thailand', 'Delivery Drone', 'ALTURA', 'งานทั่วไป / ประสานงาน'];
 const STATUSES = ['pending', 'doing', 'done'];
 const PRIORITIES = ['low', 'normal', 'high'];
 let ownerIdPromise;
@@ -52,7 +52,7 @@ function validDate(value) { return typeof value === 'string' && /^\d{4}-\d{2}-\d
 async function callTool(name, args = {}) {
   const userId = await ownerId();
   if (name === 'list_tasks') {
-    const query = new URLSearchParams({ select: '*', user_id: `eq.${userId}`, order: 'task_date.asc' });
+    const query = new URLSearchParams({ select: '*', user_id: `eq.${userId}`, order: 'task_date.asc', or: '(requested_by.is.null,requested_by.neq.__dayflow_calendar_event_v1__)' });
     if (args.project) query.set('project', `eq.${args.project}`);
     if (args.from) { if (!validDate(args.from)) throw new Error('from must be YYYY-MM-DD'); query.set('task_date', `gte.${args.from}`); }
     if (args.to) { if (!validDate(args.to)) throw new Error('to must be YYYY-MM-DD'); query.set(args.from ? 'and' : 'task_date', args.from ? `(gte.${args.from},lte.${args.to})` : `lte.${args.to}`); }
