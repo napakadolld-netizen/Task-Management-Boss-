@@ -5,6 +5,18 @@ let tasks=[],calendarEvents=[],editing=null,editingEvent=null,view='board';const
 let supabaseClient=null,currentUser=null,parentColumnReady=false;
 try{const raw=localStorage.getItem(key);if(raw){const parsed=JSON.parse(raw);if(!validTasks(parsed))throw Error();tasks=parsed}}catch{storageOK=false;setTimeout(()=>toast('อ่านข้อมูลเดิมไม่ได้ กรุณาสำรองข้อมูลก่อนใช้งาน'),100)}
 try{const raw=localStorage.getItem(calendarKey);if(raw){const parsed=JSON.parse(raw);if(!validCalendarEvents(parsed))throw Error();calendarEvents=parsed}}catch{toast('อ่านนัดหมายในเครื่องนี้ไม่สำเร็จ')}
+// Seed the requested ALTURA meeting once; preserve all existing calendar entries.
+try {
+  const seedKey='dayflow.seed.altura-meeting-2026-11-03.v1';
+  const seedId='altura-drone-presentation-2026-11-03-1000';
+  if(!localStorage.getItem(seedKey)){
+    if(!calendarEvents.some(e=>e.id===seedId || (e.date==='2026-11-03' && e.title.includes('พรีเซนต์อุปกรณ์โดรน')))){
+      calendarEvents.push({id:seedId,title:'ALTURA | ประชุมพรีเซนต์อุปกรณ์โดรนสำหรับโครงการ',project:'ALTURA',date:'2026-11-03',startTime:'10:00',endTime:'',location:'บริษัท อินเทลลิเจนซ์ อินโนเวชั่น จำกัด',attendees:'ทีม ALTURA และผู้เกี่ยวข้อง (รอยืนยันรายชื่อ)',notes:'วัตถุประสงค์: นำเสนอและหารืออุปกรณ์โดรนเพื่อพิจารณาเสนอในโครงการ\\nConcept: Payload ประมาณ 10 kg; ระยะเวลาบินเป้าหมาย 1 ชั่วโมง; รองรับการติดตั้งกล้องความร้อนและอุปกรณ์ต่อพ่วง เช่น Wi-Fi AP\\nแผนที่: https://maps.app.goo.gl/jtbjesgrg8fUGL9z7\\nหมายเหตุ: เวลาเลิกประชุมยังไม่ได้กำหนด',deleted:false,updatedAt:'2026-10-29T11:49:00.000Z'});
+      localStorage.setItem(calendarKey,JSON.stringify(calendarEvents));
+    }
+    localStorage.setItem(seedKey,'1');
+  }
+}catch(e){console.warn('ALTURA meeting seed was not saved',e)}
 function validCalendarEvents(data){return Array.isArray(data)&&data.every(e=>e&&typeof e.id==='string'&&typeof e.title==='string'&&e.title.trim()&&projects.some(p=>p[0]===e.project)&&/^\d{4}-\d{2}-\d{2}$/.test(e.date)&&typeof e.startTime==='string'&&typeof e.endTime==='string'&&typeof e.location==='string'&&typeof e.attendees==='string'&&typeof e.notes==='string'&&(e.deleted===undefined||typeof e.deleted==='boolean')&&(e.updatedAt===undefined||typeof e.updatedAt==='string'))&&new Set(data.map(e=>e.id)).size===data.length}
 function activeCalendarEvents(){return calendarEvents.filter(e=>!e.deleted)}
 function calendarEventFromDb(row){if(row.requested_by!==calendarMarker||typeof row.notes!=='string'||!row.notes.startsWith(calendarMarker))return null;try{const event=JSON.parse(row.notes.slice(calendarMarker.length));return validCalendarEvents([event])?event:null}catch{return null}}
