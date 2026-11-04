@@ -1,4 +1,4 @@
-const projects=[['13Enterprise','#6385bb','#edf2fb'],['13Education','#9474ba','#f3eef9'],['DR.EV','#508d76','#eaf5ef'],['EV Life Thailand','#c49750','#fcf5e7'],['Delivery Drone','#6d91a0','#edf5f8'],['ALTURA','#8876a8','#f2eef8'],['งานทั่วไป / ประสานงาน','#b08065','#fbf0e9']];
+const projects=[['13Enterprise','#6385bb','#edf2fb'],['13Education','#9474ba','#f3eef9'],['DR.EV','#508d76','#eaf5ef'],['EV Life Thailand','#c49750','#fcf5e7'],['Delivery Drone','#6d91a0','#edf5f8'],['SIYI','#6e8796','#eef3f5'],['ALTURA','#8876a8','#f2eef8'],['งานทั่วไป / ประสานงาน','#b08065','#fbf0e9']];
 const states=[['pending','งานค้าง','#bb965c'],['doing','กำลังดำเนินการ','#648fbc'],['done','เสร็จแล้ว','#6a9b77']];
 const $=id=>document.getElementById(id);const localDate=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 let tasks=[],calendarEvents=[],editing=null,editingEvent=null,taskFromAppointmentId=null,view='board';const key='dayflow.tasks.v1',calendarKey='dayflow.calendar-events.v1',calendarMarker='__dayflow_calendar_event_v1__';let storageOK=true;
