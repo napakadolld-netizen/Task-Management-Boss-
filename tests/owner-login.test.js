@@ -27,3 +27,20 @@ test('another Google account and unverified email cannot obtain an owner session
 test('login callback is single use and mismatched browser state cannot exchange a code',async()=>{const s=await begin();let r=res();await handler({method:'GET',headers:{cookie:'bad'},query:{action:'callback',state:s.state,code:'code'}},r);assert.equal(r.code,400);assert.equal(googleBodies.length,0);await finish(s);r=await finish(s);assert.match(r.headers.Location,/ownerError=expired/);assert.equal(googleBodies.length,1);});
 test('forged or expired session cookies are rejected and sign-out clears only the owner session',async()=>{await assert.rejects(A.owner({headers:{cookie:A.OWNER_COOKIE+'=fake'}}),{status:401});const expired=S.seal({purpose:'owner_session',user_id:id,email:'napakadolld@gmail.com',expires_at:Date.now()-1});await assert.rejects(A.owner({headers:{cookie:A.OWNER_COOKIE+'='+expired}}),{status:401});const r=res();await handler({method:'POST',headers:{origin:'https://dayflow.test'},body:{action:'signout'}},r);assert.equal(r.code,200);assert.match(r.headers['Set-Cookie'],/Max-Age=0/);assert.match(r.headers['Set-Cookie'],/__Host-dayflow-owner=/);});
 test('cross-site login requests and unsupported methods fail closed',async()=>{const r=res();await handler({method:'POST',headers:{origin:'https://evil.test'},body:{action:'signin'}},r);assert.equal(r.code,403);const g=res();await handler({method:'GET',headers:{},query:{}},g);assert.equal(g.code,405);});
+test('Google login creates a persistent 30-day cookie with matching encrypted expiry',async()=>{
+ const r=await finish(await begin()),cookie=r.headers['Set-Cookie'].find(c=>c.startsWith(A.OWNER_COOKIE+'='));
+ assert.match(cookie,/Max-Age=2592000/);assert.match(cookie,/HttpOnly; Secure; SameSite=Lax/);
+ const value=S.unseal(cookie.split(';')[0].slice(A.OWNER_COOKIE.length+1));assert.equal(value.remembered_version,1);assert.ok(Math.abs(value.expires_at-Date.now()-30*24*60*60*1000)<3000);
+});
+test('a valid older login upgrades on refresh without Google auth and does not renew on subsequent polls',async()=>{
+ const workspace=require('../api/workspace'),old=S.seal({purpose:'owner_session',user_id:id,email:'napakadolld@gmail.com',expires_at:Date.now()+3600000});
+ const r=res();await workspace({method:'GET',query:{action:'session'},headers:{cookie:A.OWNER_COOKIE+'='+old}},r);
+ assert.equal(r.body.role,'owner');assert.equal(googleBodies.length,0);assert.match(r.headers['Set-Cookie'],/Max-Age=2592000/);
+ const persisted=r.headers['Set-Cookie'].split(';')[0],again=res();await workspace({method:'GET',query:{action:'session'},headers:{cookie:persisted}},again);
+ assert.equal(again.body.role,'owner');assert.equal(again.headers['Set-Cookie'],undefined);
+});
+test('expired older logins are never upgraded',async()=>{
+ const workspace=require('../api/workspace'),old=S.seal({purpose:'owner_session',user_id:id,email:'napakadolld@gmail.com',expires_at:Date.now()-1});
+ const r=res();await workspace({method:'GET',query:{action:'session'},headers:{cookie:A.OWNER_COOKIE+'='+old}},r);
+ assert.equal(r.body.role,'viewer');assert.equal(r.headers['Set-Cookie'],undefined);
+});
