@@ -3,5 +3,9 @@
   "framework": null,
   "buildCommand": null,
   "installCommand": null,
-  "outputDirectory": "."
+  "outputDirectory": ".",
+  "functions": {
+    "api/google-calendar.js": { "maxDuration": 60 },
+    "api/google-calendar/callback.js": { "maxDuration": 60 }
+  }
 }

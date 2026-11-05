@@ -1,1 +1,10 @@
-{"name":"dayflow-personal-tasks","version":"1.0.0","private":true,"scripts":{"start":"python3 -m http.server 3000 --bind 0.0.0.0","check":"node --check app.js"}}
+{
+  "name": "dayflow-personal-tasks",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "python3 -m http.server 3000 --bind 0.0.0.0",
+    "check": "node --check app.js",
+    "test:calendar": "node --test tests/google-calendar.test.js"
+  }
+}
