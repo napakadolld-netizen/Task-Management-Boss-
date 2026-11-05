@@ -69,7 +69,7 @@ aside.calendar-sidepanel{position:static;inset:auto;width:auto;height:auto;min-h
 .todo-calendar{white-space:nowrap;padding:7px 9px;border:1px solid #e1e9e1;background:#f8faf8;color:#5e7964;font-size:10px}
 .calendar-confirm-note{font-size:10px;line-height:1.7;color:#7c8a80;margin:13px 2px 0}
 .detail-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.project-summary .detail-stage{padding:4px 9px;border-radius:12px;background:#edf3ed;color:#47644d;font-size:11px}
+.detail-stage-wrap{display:flex;align-items:center;gap:7px;white-space:nowrap;color:#778379;font-size:11px}.detail-stage-select{padding:5px 8px;border:1px solid #dfe7df;border-radius:8px;background:#fff;color:#47644d;font:inherit}
 .todo-progress{font-size:11px;color:#758277}
 .todo-progress-track{height:6px;background:#edf1ed;border-radius:99px;overflow:hidden;margin:4px 0 12px}
 .todo-progress-track span{display:block;height:100%;border-radius:inherit;background:#6b9a77;transition:width .2s ease}
