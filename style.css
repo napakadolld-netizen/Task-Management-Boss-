@@ -68,4 +68,21 @@ aside.calendar-sidepanel{position:static;inset:auto;width:auto;height:auto;min-h
 .project-todo:has(input:checked) .project-todo-copy strong{text-decoration:line-through;color:#8d9a8f}
 .todo-calendar{white-space:nowrap;padding:7px 9px;border:1px solid #e1e9e1;background:#f8faf8;color:#5e7964;font-size:10px}
 .calendar-confirm-note{font-size:10px;line-height:1.7;color:#7c8a80;margin:13px 2px 0}
-@media(max-width:600px){.project-dialog{padding:19px}.project-detail-head h2{font-size:18px}.project-summary{display:block}.project-summary span{display:block;margin-top:8px}.project-todo{flex-wrap:wrap}.todo-calendar{margin-left:30px}}
+.detail-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.project-summary .detail-stage{padding:4px 9px;border-radius:12px;background:#edf3ed;color:#47644d;font-size:11px}
+.todo-progress{font-size:11px;color:#758277}
+.todo-progress-track{height:6px;background:#edf1ed;border-radius:99px;overflow:hidden;margin:4px 0 12px}
+.todo-progress-track span{display:block;height:100%;border-radius:inherit;background:#6b9a77;transition:width .2s ease}
+.checklist-row{margin-left:0}
+.add-todo-form,.progress-update-form{display:flex;gap:8px;margin-top:10px}
+.add-todo-form input,.progress-update-form textarea{flex:1;min-width:0;padding:10px 12px;border:1px solid #dfe7df;border-radius:9px;background:#fff;color:#344539;font:inherit;font-size:12px}
+.add-todo-form button,.progress-update-form button{padding:8px 12px;border:1px solid #dce7dc;border-radius:8px;color:#426b4d;background:#f6f9f5;font-size:11px;white-space:nowrap}
+.progress-update-form{flex-direction:column;align-items:flex-start}
+.progress-update-form textarea{width:100%;min-height:76px;resize:vertical;line-height:1.6}
+.task-activity-section{margin-top:20px;border-top:1px solid #e7ece7;padding-top:14px}
+.task-activity-item{display:flex;gap:11px;padding:8px 2px}
+.task-activity-item p{margin:0;font-size:12px;line-height:1.6;color:#47594b;white-space:pre-wrap;overflow-wrap:anywhere}
+.task-activity-item small{display:block;margin-top:3px;font-size:10px;color:#849087}
+.activity-dot{width:8px;height:8px;flex:0 0 8px;margin:5px 1px 0;border-radius:50%;background:#8c7ab0}
+
+@media(max-width:600px){.project-dialog{padding:19px}.project-detail-head h2{font-size:18px}.project-summary{display:block}.project-summary span{display:block;margin-top:8px}.project-todo{flex-wrap:wrap}.todo-calendar{margin-left:30px}.add-todo-form{flex-wrap:wrap}.add-todo-form input{flex-basis:100%}}
