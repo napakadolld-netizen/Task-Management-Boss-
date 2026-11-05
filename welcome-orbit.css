@@ -92,3 +92,5 @@
  #welcome .df-bu-number{left:calc(50% - 45px);top:0}
  #welcome .df-orbit-caption{position:static;grid-column:1/-1;margin-top:0;font-size:9px}
 }
+#welcome[data-motion="off"] :is(.df-ring,.df-core,.df-ambient){animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){#welcome:not([data-motion="on"]) :is(.df-ring,.df-core,.df-ambient){animation:none}}
