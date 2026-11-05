@@ -5,7 +5,17 @@
   "installCommand": null,
   "outputDirectory": ".",
   "functions": {
-    "api/google-calendar.js": { "maxDuration": 60 },
-    "api/google-calendar/callback.js": { "maxDuration": 60 }
+    "api/google-calendar.js": {
+      "maxDuration": 60
+    },
+    "api/google-calendar/callback.js": {
+      "maxDuration": 60
+    },
+    "api/workspace.js": {
+      "maxDuration": 60
+    },
+    "api/owner-auth.js": {
+      "maxDuration": 60
+    }
   }
 }
