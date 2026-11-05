@@ -86,3 +86,27 @@ aside.calendar-sidepanel{position:static;inset:auto;width:auto;height:auto;min-h
 .activity-dot{width:8px;height:8px;flex:0 0 8px;margin:5px 1px 0;border-radius:50%;background:#8c7ab0}
 
 @media(max-width:600px){.project-dialog{padding:19px}.project-detail-head h2{font-size:18px}.project-summary{display:block}.project-summary span{display:block;margin-top:8px}.project-todo{flex-wrap:wrap}.todo-calendar{margin-left:30px}.add-todo-form{flex-wrap:wrap}.add-todo-form input{flex-basis:100%}}
+
+#stats[hidden],#daily-progress[hidden],#project-context[hidden]{display:none!important}
+.activity-view{margin-top:4px}
+.activity-summary{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 15px}
+.activity-summary span{padding:6px 10px;border:1px solid #e4e9e4;border-radius:9px;background:#fff;color:#748076;font-size:11px}
+.activity-summary b{margin-right:4px;color:#33483a;font-weight:600}
+.activity-board-columns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:start}
+.activity-column{min-width:0}
+.activity-column-head{display:flex;align-items:center;gap:8px;min-height:30px;margin-bottom:8px;color:#394c3d;font-size:12px}
+.activity-column-head strong{font-weight:600}
+.activity-column-head .activity-dot{width:8px;height:8px;flex:0 0 8px;margin:0;background:#8c7ab0}
+.activity-stage .activity-dot{background:#6d8db2}
+.activity-done .activity-dot{background:#639473}
+.activity-count{margin-left:auto;color:#829087;font-size:11px}
+.activity-card{display:flex;width:100%;flex-direction:column;align-items:flex-start;gap:5px;margin:0 0 9px;padding:12px;border:1px solid #e2e9e2;border-radius:10px;background:#fff;color:#3c5042;text-align:left;cursor:pointer}
+.activity-card:hover{border-color:#cad9cc;background:#fbfdfb}
+.activity-card-meta{color:#7a897d;font-size:10px}
+.activity-card strong{font-size:12px;line-height:1.55;font-weight:550;overflow-wrap:anywhere}
+.activity-card-event{font-size:11px;line-height:1.5;color:#5e7964;overflow-wrap:anywhere}
+.activity-card-parent{font-size:10px;line-height:1.5;color:#859188;overflow-wrap:anywhere}
+.activity-card-time{margin-top:2px;color:#829087;font-size:10px}
+.activity-empty{padding:15px 11px;border:1px dashed #dfe6df;border-radius:9px;color:#89948b;font-size:11px;text-align:center}
+.activity-footnote{margin:14px 2px 0;color:#829087;font-size:10px}
+@media(max-width:700px){.activity-board-columns{grid-template-columns:1fr;gap:9px}.activity-card{margin-bottom:7px}.tabs{flex-wrap:wrap}}
