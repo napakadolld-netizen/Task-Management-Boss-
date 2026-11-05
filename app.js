@@ -47,7 +47,7 @@ async function setupAuth(){
  $('login-button').textContent='เข้าสู่ระบบเจ้าของด้วย Google';
  $('login-button').onclick=()=>access.signIn().catch(e=>toast(e.message));
  $('welcome-owner').onclick=()=>access.signIn().catch(e=>{$('welcome-status').textContent=e.message;});
- $('welcome-enter').onclick=async()=>{document.body.dataset.entered='true';$('welcome').hidden=true;document.querySelector('body>aside').inert=false;document.querySelector('body>main').inert=false;await reloadWorkspace();};
+ $('welcome-enter').onclick=async()=>{$('filter').value='';$('search').value='';$('date').value=localDate();view='activity';render();document.body.dataset.entered='true';$('welcome').hidden=true;document.querySelector('body>aside').inert=false;document.querySelector('body>main').inert=false;await reloadWorkspace();};
  $('welcome-back').onclick=()=>{document.body.dataset.entered='false';$('welcome').hidden=false;document.querySelector('body>aside').inert=true;document.querySelector('body>main').inert=true;document.querySelectorAll('dialog[open]').forEach(d=>d.close());};
  $('logout-button').onclick=()=>access.signOut().catch(e=>toast(e.message));
  let loading=null;
