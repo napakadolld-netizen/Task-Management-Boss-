@@ -130,3 +130,5 @@ aside.calendar-sidepanel{position:static;inset:auto;width:auto;height:auto;min-h
 @media(max-width:760px){.projects-label{display:block;margin:10px 4px 4px}#projects{display:flex;overflow-x:auto;gap:7px;padding:6px 0 12px;scrollbar-width:none}#projects::-webkit-scrollbar{display:none}#projects .nav{width:auto;flex:0 0 auto;min-height:36px;padding:7px 11px;font-size:11px;border:1px solid #e1e8e2;background:white;margin:0;border-radius:8px}}
 
 .datebar[hidden]{display:none}.category-appointments{grid-column:1/-1}.category-appointment{padding:12px 0;border-top:1px solid #edf0ed}.category-appointment>small{color:#6c8174}.category-appointments h2{margin:0 0 12px}
+
+.category-views{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}.category-views[hidden]{display:none}.category-views button{padding:10px 14px;border:1px solid #dfe8e1;background:#fff;color:#54705f;font-size:12px}.category-views button.selected{background:#e5f0e8;border-color:#adc7b4;color:#286448;font-weight:600}
