@@ -5,6 +5,8 @@
   "scripts": {
     "start": "python3 -m http.server 3000 --bind 0.0.0.0",
     "check": "node --check app.js",
-    "test:calendar": "node --test tests/google-calendar.test.js tests/google-calendar-ui.test.js"
+    "test:calendar": "node --test tests/google-calendar.test.js tests/google-calendar-ui.test.js",
+    "test": "node --test tests/*.test.js",
+    "preview:welcome": "node dev/preview-server.js"
   }
 }

@@ -11,7 +11,7 @@ let tasks,links,connections,events,states,changed,failList,resetCount,googleWrit
 function response(value,status=200){return new Response(status===204?null:JSON.stringify(value),{status,headers:{'Content-Type':'application/json'}});}
 function matches(rows,q){return rows.filter(row=>[...q].every(([k,v])=>!v.startsWith('eq.')||String(row[k])===v.slice(3)));}
 beforeEach(()=>{
- Object.assign(process.env,{SUPABASE_URL:'https://supabase.test',SUPABASE_SECRET_KEY:'server-secret',SUPABASE_PUBLISHABLE_KEY:'public',GOOGLE_CLIENT_ID:'client',GOOGLE_CLIENT_SECRET:'oauth-secret',GOOGLE_REDIRECT_URI:'https://dayflow.test/api/google-calendar/callback',DAYFLOW_TOKEN_ENCRYPTION_KEY:Buffer.alloc(32,7).toString('base64')});
+ Object.assign(process.env,{DAYFLOW_WORKSPACE_OWNER_ID:user,DAYFLOW_OWNER_EMAIL:'person@example.test',SUPABASE_URL:'https://supabase.test',SUPABASE_SECRET_KEY:'server-secret',SUPABASE_PUBLISHABLE_KEY:'public',GOOGLE_CLIENT_ID:'client',GOOGLE_CLIENT_SECRET:'oauth-secret',GOOGLE_REDIRECT_URI:'https://dayflow.test/api/google-calendar/callback',DAYFLOW_TOKEN_ENCRYPTION_KEY:Buffer.alloc(32,7).toString('base64')});
  tasks=[];links=[];states=[];events=new Map();changed=[];failList=null;resetCount=0;googleWrites=[];lockAvailable=true;
  connections=[{user_id:user,calendar_id:'dedicated',encrypted_tokens:S.seal({access_token:'access',refresh_token:'refresh',expires_at:Date.now()+3600000})}];
  global.fetch=async(url,opts={})=>{
@@ -19,7 +19,7 @@ beforeEach(()=>{
   if(u.hostname==='oauth2.googleapis.com')return response({access_token:'new-access',refresh_token:'new-refresh',expires_in:3600,scope:'openid email https://www.googleapis.com/auth/calendar.app.created'});
   if(u.hostname==='openidconnect.googleapis.com')return response({sub:'google-person',email:'person@example.test'});
   if(u.hostname==='supabase.test'){
-   if(u.pathname==='/auth/v1/user')return response({id:user});
+   if(u.pathname==='/auth/v1/user')return response({id:user,email:'person@example.test',app_metadata:{provider:'google'},identities:[{provider:'google',identity_data:{email:'person@example.test'}}]});
    const table=u.pathname.split('/').at(-1);
    if(table==='dayflow_gcal_lock'){const result=lockAvailable;lockAvailable=false;return response(result);}
    if(table==='dayflow_gcal_unlock'){lockAvailable=true;return response(null);}
@@ -75,13 +75,13 @@ test('OAuth callback rejects a mismatched browser cookie',async()=>{const res={s
 
 function resMock(){return {headers:{},setHeader(k,v){this.headers[k]=v;},status(s){this.code=s;return this;},json(v){this.body=v;return this;},end(){return this;}};}
 test('OAuth uses PKCE, bounded cookie and single-use state',async()=>{
- const res=resMock();await handler({method:'POST',query:{action:'connect'},headers:{authorization:'Bearer session',origin:'https://dayflow.test'}},res);
+ const res=resMock();await handler({method:'POST',query:{action:'connect'},headers:{authorization:'Bearer header.'+Buffer.from(JSON.stringify({sub:user,amr:[{method:'oauth'}]})).toString('base64url')+'.signature',origin:'https://dayflow.test'}},res);
  assert.equal(res.code,200);const url=new URL(res.body.url);assert.equal(url.searchParams.get('code_challenge_method'),'S256');assert.equal(url.searchParams.get('access_type'),'offline');assert.match(res.headers['Set-Cookie'],/HttpOnly; Secure; SameSite=Lax/);
  const state=url.searchParams.get('state'),cookie='__Host-dayflow-gcal-state='+state;
  const callback=resMock();await handler({method:'GET',query:{action:'callback',state,code:'code'},headers:{cookie}},callback);assert.equal(callback.code,303);assert.match(callback.headers.Location,/connected$/);assert.equal(states.length,0);assert.equal(connections[0].google_sub,'google-person');assert(!connections[0].encrypted_tokens.includes('new-refresh'));
  const replay=resMock();await handler({method:'GET',query:{action:'callback',state,code:'code'},headers:{cookie}},replay);assert.equal(replay.code,400);
 });
-test('cross-origin mutations are rejected',async()=>{const res=resMock();await handler({method:'POST',query:{action:'sync'},headers:{authorization:'Bearer session',origin:'https://evil.test'}},res);assert.equal(res.code,403);});
+test('cross-origin mutations are rejected',async()=>{const res=resMock();await handler({method:'POST',query:{action:'sync'},headers:{authorization:'Bearer header.'+Buffer.from(JSON.stringify({sub:user,amr:[{method:'oauth'}]})).toString('base64url')+'.signature',origin:'https://evil.test'}},res);assert.equal(res.code,403);});
 test('concurrent sync is rejected by database lock',async()=>{lockAvailable=false;await assert.rejects(syncUser(user),/กำลังซิงก์/);assert.equal(googleWrites.length,0);});
 test('paginated Google snapshot retains every page and final token',async()=>{const {listChanges}=require('../lib/google-calendar-sync');let calls=0;const g={api:async path=>{calls++;return calls===1?{items:[{id:'one'}],nextPageToken:'page2'}:{items:[{id:'two'}],nextSyncToken:'checkpoint'};}};const result=await listChanges(g,'dedicated',null);assert.equal(result.items.length,2);assert.equal(result.token,'checkpoint');});
 

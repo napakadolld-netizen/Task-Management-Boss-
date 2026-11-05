@@ -5,7 +5,7 @@
  const dialog=document.createElement('dialog');dialog.id='google-calendar-dialog';dialog.className='google-calendar-dialog';
  dialog.innerHTML='<div class="modal-title"><h2>Google Calendar · Dayflow</h2><button type="button" id="google-close" aria-label="ปิด">✕</button></div><p id="google-status" role="status" aria-live="polite"></p><div id="google-setup" hidden><p>ยังไม่ได้เปิดการเชื่อมต่อจริง ต้องตั้งค่า Google Cloud, OAuth และฐานข้อมูลก่อน</p><ol><li>เปิด Google Calendar API ใน Google Cloud</li><li>สร้าง OAuth Client แบบ Web application และตั้งค่า callback</li><li>ตั้งค่า Environment Variables ใน Vercel และรันไฟล์ migration ใน Supabase</li></ol><a href="docs/google-calendar-setup.html" target="_blank" rel="noopener">เปิดคู่มือตั้งค่าฉบับเต็ม ↗</a></div><p class="auth-description">เชื่อมเฉพาะปฏิทินชื่อ Dayflow ที่แอปสร้าง นัดหมายจาก Google ที่ยังไม่มีหมวดจะเข้าหมวด “งานทั่วไป / ประสานงาน” แล้วเปลี่ยนหมวดได้</p><div class="google-actions"><button id="google-connect" class="primary">เชื่อมบัญชี Google</button><button id="google-sync" class="primary">ซิงก์ตอนนี้</button><button id="google-disconnect" class="quiet">ยกเลิกการเชื่อมต่อ</button></div><div id="google-conflicts"></div><p class="calendar-confirm-note">ซิงก์อัตโนมัติขณะเปิดเว็บทุกประมาณ 60 วินาที และหลังบันทึกนัดหมายที่เปิดซิงก์ไว้ การซิงก์เมื่อปิดเว็บต้องเปิด scheduler ตามคู่มือ นัดหมายเกิดซ้ำหรือประเภทพิเศษให้จัดการใน Google Calendar ในรุ่นนี้</p>';
  document.body.append(dialog);
- const button=document.createElement('button');button.id='google-calendar-settings';button.className='quiet';button.textContent='Google Calendar';document.querySelector('.header-actions').append(button);
+ const button=document.createElement('button');button.id='google-calendar-settings';button.className='quiet';button.textContent='Google Calendar';button.hidden=true;document.querySelector('.header-actions').append(button);
  async function api(action,body){
   const client=adapter.getClient();const session=client?await client.auth.getSession():null,token=session?.data?.session?.access_token;
   const res=await fetch('/api/google-calendar?action='+action,{method:body===undefined?'GET':'POST',cache:'no-store',headers:{...(token?{Authorization:'Bearer '+token}:{}),...(body===undefined?{}:{'Content-Type':'application/json'})},...(body===undefined?{}:{body:JSON.stringify(body)})});
@@ -48,7 +48,7 @@
   await refresh();
   if(connection.connected)await perform(()=>api('sync',{}),{silent:true});
  }
- window.addEventListener('dayflow:ready',()=>{void autoSync({initial:true});});
+ window.addEventListener('dayflow:ready',()=>{button.hidden=!adapter.getUser();void autoSync({initial:true});});
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)void autoSync();});
  setInterval(()=>{void autoSync();},60000);
  const callbackUrl=new URL(window.location.href),result=callbackUrl.searchParams.get('googleCalendar');

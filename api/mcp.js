@@ -2,7 +2,6 @@ const { timingSafeEqual, randomUUID } = require('crypto');
 const PROJECTS = ['13Enterprise', '13Education', 'DR.EV', 'EV Life Thailand', 'Delivery Drone', 'ALTURA', 'งานทั่วไป / ประสานงาน'];
 const STATUSES = ['pending', 'doing', 'done'];
 const PRIORITIES = ['low', 'normal', 'high'];
-let ownerIdPromise;
 
 function jsonRpc(res, id, result) {
   res.setHeader('Content-Type', 'application/json');
@@ -27,21 +26,8 @@ function sbHeaders() {
   const key = process.env.SUPABASE_SECRET_KEY;
   return { apikey: key, Authorization: `Bearer ${key}`, 'Content-Type': 'application/json', Prefer: 'return=representation' };
 }
-async function ownerId() {
-  if (!ownerIdPromise) ownerIdPromise = (async () => {
-    const base = process.env.SUPABASE_URL;
-    const email = (process.env.DAYFLOW_OWNER_EMAIL || '').trim().toLowerCase();
-    if (!base || !process.env.SUPABASE_SECRET_KEY || !email) throw new Error('Vercel environment is missing Supabase or owner settings');
-    const response = await fetch(`${base}/auth/v1/admin/users?page=1&perPage=1000`, { headers: sbHeaders() });
-    const body = await response.json();
-    if (!response.ok) throw new Error(body.message || 'Unable to look up the Dayflow account');
-    const users = body.users || body;
-    const user = users.find(item => (item.email || '').toLowerCase() === email);
-    if (!user) throw new Error('The Dayflow account has not signed in yet. Sign in to the website once, then retry.');
-    return user.id;
-  })().catch(error => { ownerIdPromise = null; throw error; });
-  return ownerIdPromise;
-}
+async function ownerId() { return require('../lib/workspace-access').ownerId(); }
+
 async function api(path, options = {}) {
   const response = await fetch(`${process.env.SUPABASE_URL}/rest/v1/${path}`, { ...options, headers: { ...sbHeaders(), ...(options.headers || {}) } });
   const body = await response.text();
@@ -116,3 +102,4 @@ module.exports = async function handler(req, res) {
   }
   return rpcError(res, message.id ?? null, -32601, 'Method not found');
 };
+
