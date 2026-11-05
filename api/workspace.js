@@ -12,7 +12,7 @@ module.exports=async(req,res)=>{
   if(!['GET','POST'].includes(req.method))return res.status(405).json({error:'Method not allowed'});
   if(!process.env.SUPABASE_URL||!process.env.SUPABASE_PUBLISHABLE_KEY||!process.env.SUPABASE_SECRET_KEY)return res.status(503).json({error:'ยังไม่ได้ตั้งค่าพื้นที่ทำงาน'});
   if(req.method==='GET'&&req.query?.action==='session'){
-   try{return res.status(200).json({role:'owner',user:await access.owner(req)});}catch(e){if([401,403].includes(e.status))return res.status(200).json({role:'viewer'});throw e;}
+   try{const user=await access.owner(req);access.remember(req,res);return res.status(200).json({role:'owner',user});}catch(e){if([401,403].includes(e.status))return res.status(200).json({role:'viewer'});throw e;}
   }
   const query=new URLSearchParams({user_id:'eq.'+access.ownerId(),select:columns});
   if(req.method==='GET'){

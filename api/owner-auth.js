@@ -1,7 +1,7 @@
 const {randomBytes,createHash}=require('node:crypto');
 const S=require('../lib/google-calendar-store');
 const A=require('../lib/workspace-access');
-const STATE_COOKIE='__Host-dayflow-owner-state',SESSION_SECONDS=8*60*60;
+const STATE_COOKIE='__Host-dayflow-owner-state',SESSION_SECONDS=A.SESSION_SECONDS;
 function hash(state){return createHash('sha256').update(state).digest('hex');}
 function finish(res,error,session){
  const cookies=[A.cookie(STATE_COOKIE,'',0)];
@@ -24,7 +24,7 @@ async function callback(req,res){
  if(!response.ok)return finish(res,'failed');
  const profile=await response.json();
  if(!profile.sub||profile.email_verified!==true||!process.env.DAYFLOW_OWNER_EMAIL||A.normalizeEmail(profile.email)!==A.normalizeEmail(process.env.DAYFLOW_OWNER_EMAIL))return finish(res,'not_owner');
- return finish(res,null,{purpose:'owner_session',user_id:A.ownerId(),google_sub:profile.sub,email:profile.email,expires_at:Date.now()+SESSION_SECONDS*1000});
+ return finish(res,null,{purpose:'owner_session',remembered_version:1,user_id:A.ownerId(),google_sub:profile.sub,email:profile.email,expires_at:Date.now()+SESSION_SECONDS*1000});
 }
 module.exports=async(req,res)=>{
  res.setHeader('Cache-Control','no-store');
