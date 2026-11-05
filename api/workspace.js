@@ -16,13 +16,13 @@ module.exports=async(req,res)=>{
   }
   const query=new URLSearchParams({user_id:'eq.'+access.ownerId(),select:columns});
   if(req.method==='GET'){
-   if(process.env.DAYFLOW_PUBLIC_WORKSPACE!=='enabled')await access.owner(req);
+   if(process.env.DAYFLOW_PUBLIC_WORKSPACE==='disabled')await access.owner(req);
    const rows=[];
    for(let offset=0;offset<100000;offset+=1000){query.set('order','id.asc');query.set('limit','1000');query.set('offset',String(offset));const batch=await database(query);rows.push(...batch);if(batch.length<1000)return res.status(200).json({rows});}
    return res.status(503).json({error:'ข้อมูลมีจำนวนมากเกินขีดจำกัด กรุณาติดต่อเจ้าของพื้นที่'});
   }
   await access.owner(req);
-  if(req.headers.origin&&req.headers.origin!==process.env.DAYFLOW_SITE_ORIGIN)return res.status(403).json({error:'Invalid request origin'});
+  if(req.headers.origin&&req.headers.origin!==access.origin())return res.status(403).json({error:'Invalid request origin'});
   const body=typeof req.body==='string'?JSON.parse(req.body):req.body;
   if(body?.action==='delete'&&typeof body.id==='string'&&body.id.length<=200){query.set('id','eq.'+body.id);return res.status(200).json({rows:await database(query,{method:'DELETE'})});}
   if(body?.action!=='upsert'||!Array.isArray(body.rows)||!body.rows.length||body.rows.length>500)return res.status(400).json({error:'Invalid workspace operation'});

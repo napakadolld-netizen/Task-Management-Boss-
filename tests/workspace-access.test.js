@@ -21,7 +21,7 @@ function row(){return{id:'task1',user_id:'forged',title:'Task',notes:'Details',r
 test('public visitors read only the fixed owner workspace without credentials or tokens in the response',async()=>{
  const r=await call();assert.equal(r.code,200);assert.equal(r.value.rows[0].title,'Shared task');assert.match(r.headers['Cache-Control'],/no-store/);assert.equal(calls[0].u.searchParams.get('user_id'),'eq.'+workspace);assert.doesNotMatch(JSON.stringify(r.value),/private|publishable/);
 });
-test('public data is closed until deployment explicitly enables sharing',async()=>{delete process.env.DAYFLOW_PUBLIC_WORKSPACE;const r=await call();assert.equal(r.code,401);assert.equal(calls.length,0);});
+test('public sharing can be explicitly disabled',async()=>{process.env.DAYFLOW_PUBLIC_WORKSPACE='disabled';const r=await call();assert.equal(r.code,401);assert.equal(calls.length,0);});
 test('anonymous visitors cannot write even if the UI is bypassed',async()=>{const r=await call({method:'POST',body:{action:'upsert',rows:[row()]}});assert.equal(r.code,401);assert.equal(calls.length,0);});
 test('a different Google account cannot edit',async()=>{identity.email='visitor@gmail.com';const r=await call({method:'POST',token:'valid-visitor',body:{action:'delete',id:'task1'}});assert.equal(r.code,403);assert.equal(calls.length,1);});
 test('owner email login without Google is still read-only',async()=>{identity.app_metadata.provider='email';const r=await call({method:'POST',token:'email-login',body:{action:'delete',id:'task1'}});assert.equal(r.code,403);assert.equal(calls.length,1);});
