@@ -109,4 +109,5 @@ aside.calendar-sidepanel{position:static;inset:auto;width:auto;height:auto;min-h
 .activity-card-time{margin-top:2px;color:#829087;font-size:10px}
 .activity-empty{padding:15px 11px;border:1px dashed #dfe6df;border-radius:9px;color:#89948b;font-size:11px;text-align:center}
 .activity-footnote{margin:14px 2px 0;color:#829087;font-size:10px}
+#board.activity-view{display:block;width:100%}
 @media(max-width:700px){.activity-board-columns{grid-template-columns:1fr;gap:9px}.activity-card{margin-bottom:7px}.tabs{flex-wrap:wrap}}
