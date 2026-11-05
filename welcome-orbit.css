@@ -59,38 +59,46 @@
 @media(max-width:1100px){#welcome .df-hero{grid-template-columns:minmax(0,1fr);gap:40px;padding:55px 0 45px}#welcome .df-copy{max-width:700px}#welcome .df-title{font-size:clamp(38px,6vw,58px)}#welcome .df-complete-orbit{max-width:530px}}
 @media(max-width:540px){#welcome .df-stage{padding:25px 20px 22px}#welcome .df-tag{display:none}#welcome .df-title{font-size:39px;letter-spacing:-1.3px}#welcome .df-welcome{font-size:13px}#welcome .df-hero{padding:40px 0 30px;gap:20px}#welcome .df-complete-orbit{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto;gap:12px;padding:20px 0 0}#welcome .df-node:nth-child(n){grid-column:auto;grid-row:auto;min-height:105px}#welcome .df-core{grid-column:1/-1;grid-row:1;margin:15px auto 35px}#welcome .df-ring{inset:0 auto auto calc(50% - 80px);width:160px;height:160px}#welcome .df-ring:nth-child(2){inset:20px auto auto calc(50% - 60px);width:120px;height:120px}#welcome .df-connections{display:none}#welcome .df-bottom{align-items:flex-start;flex-direction:column;gap:12px}#welcome .df-footer-actions{gap:10px 22px}#welcome .df-motion-toggle,#welcome .df-owner{min-height:44px}#welcome .df-orbit-caption{font-size:9px;letter-spacing:.5px}#welcome .df-subtitle{font-size:13px}}
 @media(prefers-reduced-motion:reduce){#welcome:not([data-motion="on"]) :is(.df-ring,.df-core,.df-ambient){animation:none}#welcome .df-enter{transition:none}}
-/* Solar system: the BU number also identifies its orbit, from inside to outside. */
-#welcome .df-hero{grid-template-columns:minmax(0,.85fr) minmax(540px,1.15fr);gap:35px}
-#welcome .df-complete-orbit{display:block;width:100%;max-width:600px;aspect-ratio:1;margin:20px auto 40px;padding:0}
+
+#welcome .df-stage{min-height:700px}
+#welcome .df-hero{grid-template-columns:minmax(0,1fr) minmax(430px,1fr);gap:35px}
+#welcome .df-complete-orbit{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(3,minmax(95px,auto));gap:28px 12px;aspect-ratio:auto;padding:25px 0;width:100%;max-width:510px}
 #welcome .df-all-categories{display:contents}
-#welcome .df-ring,#welcome .df-ring:nth-child(2){width:var(--orbit);height:var(--orbit);inset:auto;left:50%;top:50%;translate:-50% -50%;opacity:.72;border:1px solid #b6cabc;border-radius:50%;animation:welcome-turn var(--period) linear infinite}
-#welcome .df-ring:nth-child(even){animation-direction:reverse}
-#welcome .df-ring:after{content:'';position:absolute;top:14%;left:14%;width:4px;height:4px;border-radius:50%;background:#7c9e80;box-shadow:0 0 9px #37684b33}
-#welcome .df-ring:first-child:after{width:5px;height:5px}
-#welcome .df-core{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:76px;height:76px;margin:0;gap:4px;background:radial-gradient(circle at 35% 30%,#74966a,#244e35 70%);box-shadow:0 0 0 12px #91ad7415,0 0 45px #6c9b4938;z-index:2}
-#welcome .df-core>span:first-child{font-size:26px}
-#welcome .df-core>span:last-child{font-size:9px}
-#welcome .df-node{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);width:98px;padding:0;gap:6px;min-height:0;z-index:3}
-#welcome .df-node .df-mark{width:66px;height:48px;padding:7px;border-radius:16px;box-shadow:0 3px 0 color-mix(in srgb,var(--brand),transparent 80%),0 7px 16px #193f320d}
-#welcome .brand-enterprise .df-mark{width:46px;height:51px;padding:4px}
-#welcome .brand-education .df-mark{width:88px;height:42px;padding:4px}
-#welcome .brand-drev .df-mark{width:48px;height:48px;padding:4px}
-#welcome .df-label{font-size:11px;line-height:1.5;max-width:98px;padding:1px 3px;overflow-wrap:normal}
-#welcome .df-bu-number{position:absolute;left:calc(50% - 41px);top:-8px;font:500 10px/20px 'DM Sans',sans-serif;min-width:23px;text-align:center;border:1px solid var(--df-line);border-radius:20px;background:var(--df-bg);color:var(--df-ink);z-index:1}
-#welcome .df-orbit-caption{position:absolute;top:100%;left:0;width:100%;margin-top:16px;font-size:10px;letter-spacing:1px;padding:0}
-@media(max-width:1200px){#welcome .df-hero{grid-template-columns:minmax(0,1fr);gap:30px}#welcome .df-complete-orbit{max-width:560px}}
-@media(max-width:600px){
- #welcome .df-complete-orbit{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));aspect-ratio:auto;gap:20px 12px;padding:185px 0 0;margin:0 auto 20px}
- #welcome .df-node:nth-child(n){position:relative;left:auto;top:auto;transform:none;width:auto;grid-row:auto;grid-column:auto;min-height:98px;gap:8px}
- #welcome .df-core{position:absolute;left:50%;top:76px;grid-row:auto;grid-column:auto;margin:0}
- #welcome .df-ring,#welcome .df-ring:nth-child(2){width:calc(var(--orbit)*.31);height:auto;aspect-ratio:1;top:76px;left:50%}
- #welcome .df-node .df-mark{width:76px;height:52px}
- #welcome .brand-enterprise .df-mark{width:48px;height:55px}
- #welcome .brand-drev .df-mark{width:52px;height:52px}
- #welcome .brand-education .df-mark{width:100px;height:48px}
- #welcome .df-label{font-size:11px;max-width:125px}
- #welcome .df-bu-number{left:calc(50% - 45px);top:0}
- #welcome .df-orbit-caption{position:static;grid-column:1/-1;margin-top:0;font-size:9px}
-}
-#welcome[data-motion="off"] :is(.df-ring,.df-core,.df-ambient){animation-play-state:paused}
-@media(prefers-reduced-motion:reduce){#welcome:not([data-motion="on"]) :is(.df-ring,.df-core,.df-ambient){animation:none}}
+#welcome .df-complete-orbit .df-node{position:relative;left:auto;top:auto;transform:none;animation:none;width:auto;max-width:none;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;flex-direction:column;justify-content:center;gap:9px;text-align:center}
+#welcome .df-node:nth-child(1){grid-area:1/2}
+#welcome .df-node:nth-child(2){grid-area:1/3}
+#welcome .df-node:nth-child(3){grid-area:2/3}
+#welcome .df-node:nth-child(4){grid-area:3/3}
+#welcome .df-node:nth-child(5){grid-area:3/2}
+#welcome .df-node:nth-child(6){grid-area:3/1}
+#welcome .df-node:nth-child(7){grid-area:2/1}
+#welcome .df-node:nth-child(8){grid-area:1/1}
+#welcome .df-complete-orbit .df-core{grid-area:2/2;align-self:center;justify-self:center;box-shadow:0 0 0 12px color-mix(in srgb,var(--df-accent),transparent 95%)}
+#welcome .df-ring{inset:4% 7%;opacity:.35;animation:none!important}
+#welcome .df-ring:after{display:none}
+#welcome .df-connections{opacity:.45}
+#welcome .df-particles circle{opacity:.4}
+#welcome .df-node.df-real-logo .df-mark,#welcome .df-node .df-mark{width:78px;height:57px;padding:9px;border-radius:17px;transition:translate .3s ease,box-shadow .3s ease;background:#fff;box-shadow:0 4px 0 color-mix(in srgb,var(--brand),transparent 87%),0 9px 20px color-mix(in srgb,var(--df-ink),transparent 95%)}
+#welcome .df-node.brand-enterprise .df-mark{width:58px;height:64px;padding:6px}
+#welcome .df-node.brand-education .df-mark{background:#30477e;width:100px;height:54px}
+#welcome .df-node.brand-drev .df-mark{background:#00bf98;width:57px;height:57px;padding:5px}
+#welcome .df-node:hover .df-mark{translate:0 -6px;box-shadow:0 7px 0 color-mix(in srgb,var(--brand),transparent 83%),0 16px 25px color-mix(in srgb,var(--brand),transparent 86%)}
+#welcome .df-node .df-label{font-size:11px;line-height:1.6;max-width:125px;white-space:normal;color:var(--df-ink);border-radius:4px;padding:1px 3px;background:var(--df-bg)}
+#welcome .df-orbit-caption{position:static;grid-column:1/-1;font-size:10px;letter-spacing:1px;margin-top:6px}
+#welcome .df-draft-caption{display:none}
+@media(max-width:900px){#welcome .df-hero{display:flex;flex-direction:column;align-items:stretch;gap:35px}#welcome .df-complete-orbit{max-width:490px}}
+@media(max-width:460px){#welcome .df-complete-orbit{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));padding:0;gap:22px 10px;min-height:0}#welcome .df-node:nth-child(n){grid-area:auto;min-height:100px}#welcome .df-complete-orbit .df-core{position:static;transform:none;grid-area:auto;grid-column:1/-1;margin:15px auto 25px}#welcome .df-ring{display:none}#welcome .df-orbit-caption{grid-column:1/-1}}
+@media(prefers-reduced-motion:reduce){#welcome .df-node .df-mark{transition:none}}
+
+#welcome .df-complete-orbit .df-core{position:relative;width:128px;height:128px;gap:12px;animation:welcome-glow 8s ease-in-out infinite}
+#welcome .df-complete-orbit .df-core>span:first-child{font-size:34px}
+#welcome .df-complete-orbit .df-core>span:last-child{font-size:14px;letter-spacing:2px}
+#welcome .df-complete-orbit{grid-template-rows:repeat(3,minmax(128px,auto));gap:28px 16px}
+#welcome .df-hero{grid-template-columns:minmax(0,1fr) minmax(450px,1fr)}
+#welcome .df-connections{display:block;opacity:.22}
+#welcome .df-ring{opacity:.25;animation:none!important}
+#welcome[data-motion="off"] :is(.df-core,.df-ambient){animation-play-state:paused}
+@media(max-width:1100px){#welcome .df-hero{display:flex;flex-direction:column;align-items:stretch;gap:35px}}
+@media(max-width:540px){#welcome .df-complete-orbit{grid-template-rows:auto}#welcome .df-complete-orbit .df-core{position:static;transform:none;grid-column:1/-1;margin:20px auto 30px}}
+
+@media(max-width:540px){#welcome .df-connections{display:none}}
