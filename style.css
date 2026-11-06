@@ -158,3 +158,5 @@ body[data-access="viewer"] .calendar-from-task{display:none!important}
 #projects .category-symbol{background:#edf4ed;color:#55785f;font-size:20px}
 #projects .nav{align-items:center;gap:9px}
 @media(max-width:760px){#projects .category-logo{width:26px;height:25px;flex-basis:26px;padding:2px}#projects .category-symbol{font-size:17px}}
+
+.event-hub-toolbar{margin:0 0 18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}.event-hub-toolbar label{font-size:12px;color:#647b6c;display:flex;gap:10px;align-items:center;flex-wrap:wrap}.event-hub-toolbar select{font-size:12px;padding:8px 11px;max-width:100%}#event-fields>label{margin-bottom:12px}#event-fields p{line-height:1.8}
