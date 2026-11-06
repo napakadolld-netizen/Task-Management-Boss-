@@ -102,3 +102,33 @@
 @media(max-width:540px){#welcome .df-complete-orbit{grid-template-rows:auto}#welcome .df-complete-orbit .df-core{position:static;transform:none;grid-column:1/-1;margin:20px auto 30px}}
 
 @media(max-width:540px){#welcome .df-connections{display:none}}
+
+#welcome .df-stage{min-height:760px}
+#welcome .df-node{font:inherit;color:var(--df-ink);cursor:inherit}
+#welcome .df-node .df-mark{transition:translate .25s,box-shadow .25s}
+#welcome .df-node:hover .df-mark,#welcome .df-node:focus-visible .df-mark{translate:0 -6px;box-shadow:0 7px 0 color-mix(in srgb,var(--brand),transparent 80%),0 15px 27px color-mix(in srgb,var(--brand),transparent 85%)}
+#welcome .df-node[aria-pressed="true"] .df-label{color:var(--brand)}
+#welcome .df-bu-description{grid-column:1/-1;min-height:44px;text-align:center;color:var(--df-soft);font-size:12px;line-height:1.8;margin:0}
+#welcome .df-latest{display:flex;gap:12px;align-items:flex-start;text-align:left;max-width:360px;width:100%;padding:15px 0;margin-top:26px;border:0;border-top:1px solid var(--df-line);border-radius:0;background:transparent;color:var(--df-ink);font:inherit;cursor:inherit}
+#welcome .df-latest:hover{background:color-mix(in srgb,var(--df-accent),transparent 95%)}
+#welcome .df-latest .df-latest-icon{display:grid;place-items:center;width:31px;height:31px;flex-shrink:0;border-radius:50%;background:color-mix(in srgb,var(--df-accent),transparent 92%);color:var(--df-accent)}
+#welcome .df-latest-label{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--df-soft);margin-bottom:5px}
+#welcome .df-example{font-size:11px;padding:1px 5px;background:color-mix(in srgb,var(--df-accent),transparent 90%);border-radius:4px}
+#welcome .df-latest strong{font-size:13px;font-weight:500;line-height:1.7}
+#welcome .df-latest small{display:block;font-size:11px;color:var(--df-soft);line-height:1.8;margin-top:4px}
+#welcome .df-latest-arrow{margin-left:auto;align-self:center}
+#welcome .df-overlay{justify-content:flex-start;overflow:visible;min-height:100%;padding:36px;background:var(--df-bg);animation:none}
+#welcome .df-overlay h2{font-size:30px;line-height:1.5;margin:28px 0 12px}
+#welcome .df-detail-copy{font-size:14px;line-height:1.9;color:var(--df-soft);max-width:600px}
+#welcome .df-detail-row{border-top:1px solid var(--df-line);padding:20px 0;margin-top:25px;font-size:14px;line-height:1.9}
+#welcome .df-detail-row strong{font-weight:500}
+#welcome .df-detail-row p{color:var(--df-soft);margin:8px 0;font-size:13px}
+#welcome .df-back{margin-top:30px;min-height:44px}
+#welcome[data-intro="on"] .df-copy,#welcome[data-intro="on"] .df-node{animation:df-polish-intro .5s ease-out both}
+
+#welcome .df-node{animation-delay:calc(.2s + var(--node-index)*.075s)}
+@keyframes df-polish-intro{from{opacity:0;translate:0 12px}to{opacity:1;translate:0 0}}
+@media(max-width:460px){#welcome .df-overlay{padding:25px}#welcome .df-stage{min-height:760px}#welcome .df-overlay h2{font-size:25px}}
+@media(prefers-reduced-motion:reduce){#welcome .df-copy,#welcome .df-core,#welcome .df-node{animation:none}#welcome .df-mark{transition:none}}
+
+#welcome .df-latest strong{display:block;overflow-wrap:anywhere}#welcome .df-latest small{overflow-wrap:anywhere}#welcome .df-latest-label{flex-wrap:wrap}#welcome .df-bu-description{margin-top:5px}
