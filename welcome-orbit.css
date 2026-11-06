@@ -132,3 +132,10 @@
 @media(prefers-reduced-motion:reduce){#welcome .df-copy,#welcome .df-core,#welcome .df-node{animation:none}#welcome .df-mark{transition:none}}
 
 #welcome .df-latest strong{display:block;overflow-wrap:anywhere}#welcome .df-latest small{overflow-wrap:anywhere}#welcome .df-latest-label{flex-wrap:wrap}#welcome .df-bu-description{margin-top:5px}
+
+#welcome .df-complete-orbit .df-node.brand-event{--brand:#557e64;grid-column:1/-1;grid-row:4;justify-self:center;flex-direction:row;align-items:center;gap:13px;padding:8px 15px;border-radius:13px;background:#edf4eb;border:1px solid #dbe8d9;width:auto;min-height:64px;max-width:100%}
+#welcome .df-node.brand-event .df-mark{width:45px;height:43px;padding:5px;border-radius:12px;background:#fff;font-size:25px;box-shadow:none}
+#welcome .df-node.brand-event .df-label{text-align:left;font-size:12px;max-width:none;background:transparent}
+#welcome .event-welcome-caption{display:block;font-size:11px;font-weight:400;color:var(--df-soft);margin-top:3px}
+#welcome .df-complete-orbit .df-node.brand-event:hover{background:#e4efdf}
+@media(max-width:540px){#welcome .df-complete-orbit .df-node.brand-event{grid-row:auto;grid-column:1/-1}}
